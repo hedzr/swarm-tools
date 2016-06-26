@@ -38,6 +38,7 @@ at the version, these things not be done with `swarm` :
 
 swarm
 
+```
 USAGE: swarm [manager-start-all|manager-stop-all|manager-restart-all|manager-rm-all| \
               manager-start|manager-stop|manager-restart|manager-rm| \
               manager-logs| \
@@ -48,50 +49,59 @@ USAGE: swarm [manager-start-all|manager-stop-all|manager-restart-all|manager-rm-
               run|call|pull|push|clear|clear-by-image-name| \
               add-ali|add-ali-all| \
               consul-leader|consul-peers]
+```
 
 * Basic Usages:
-  swarm manager-add-ali  : add ali docker accelerator
-  swarm manager-logs     : print the latest logs in swarm container.
-  swarm manager-start/manager-rm : run or clean stop the swarm container completely.
-  swarm manager-stop     : fast pause the swarm container.
-  swarm manager-restart  : fast restart the paused swarm container after 'swarm stop'.
-  swarm manager-images
 
-  swarm consul-leader
-  swarm consul-peers
+  - swarm manager-add-ali  : add ali docker accelerator
+  - swarm manager-logs     : print the latest logs in swarm container.
+  - swarm manager-start/manager-rm : run or clean stop the swarm container completely.
+  - swarm manager-stop     : fast pause the swarm container.
+  - swarm manager-restart  : fast restart the paused swarm container after 'swarm stop'.
+  - swarm manager-images
+  ---
+  - swarm consul-leader
+  - swarm consul-peers
+  ---
+  - swarm leader   : query and print who is the current leader.
+  - swarm SWARM_MANAGERS :
+  - swarm SWARM_NODES    : list the swarm SWARM_NODES
+  - swarm SWARM_NODES-live
+  - swarm SWARM_NODES-count
+  - swarm clear    : remove all running or pause containers on all swarm SWARM_NODES
+  - swarm clear-by-image-name : ...
+  - swarm push
+  - swarm pull     : ! pull container onto each SWARM_NODES
+  - swarm call     : call docker command on swarm cluster
+  - swarm run      : run container on swarm cluster
+  ---
+  - ... other docker commands, such as:
+    - 'swarm ps' like 'docker ps' but apply to swarm cluster,
+    - 'swarm build' like 'docker build' but the new container will be built and push to each SWARM_NODES.
+    - 'swarm run' like 'docker run' but run a container on some node with swarm cluster scheduling stratages.
+    - 'swarm info' like 'docker info' but show the information of swarm cluster.
 
-  swarm leader   : query and print who is the current leader.
-  swarm SWARM_MANAGERS :
-  swarm SWARM_NODES    : list the swarm SWARM_NODES
-  swarm SWARM_NODES-live
-  swarm SWARM_NODES-count
-  swarm clear    : remove all running or pause containers on all swarm SWARM_NODES
-  swarm clear-by-image-name : ...
-  swarm push
-  swarm pull     : ! pull container onto each SWARM_NODES
-  swarm call     : call docker command on swarm cluster
-  swarm run      : run container on swarm cluster
-  
-  ... other docker commands, such as:
-    'swarm ps' like 'docker ps' but apply to swarm cluster,
-    'swarm build' like 'docker build' but the new container will be built and push to each SWARM_NODES.
-    'swarm run' like 'docker run' but run a container on some node with swarm cluster scheduling stratages.
-    'swarm info' like 'docker info' but show the information of swarm cluster.
 
 * Examples:
-  swarm ps
-  swarm images
-  swarm manager-images
-  swarm run nginx
+
+  - swarm ps
+  - swarm images
+  - swarm manager-images
+  - swarm run nginx
 
 * Advanced Examples:
   1. swarm run -P --name nginx -t nginx
   2. swarm run -P --name nginx -e affinity:image=nginx -t nginx
   3. swarm run -P --name mysql -e affinity:container=nginx -t mysql
-  4. 启动5个nginx实例 (由于一个swarm-node上不允许暴露到相同的端口，所以不能启动超过swarm-SWARM_NODES-count的统一端口的实例)：
+  4. 启动5个nginx实例
+     由于一个swarm-node上不允许暴露到相同的端口，所以不能启动超过swarm-SWARM_NODES-count的统一端口的实例)：
+     ```bash
      for ((i=0;i<5;i++)); do swarm run -P --name nginx-$i -p 83:80 -t nginx; done
+     ```
 
 * Samples:
+
+```bash
   swarm run -P  -m 1G --name db mysql
   swarm run -P  -m 1G --name frontend nginx
   for ((i=0;i<5;i++)); do swarm run -P  --label zone==external --label mode==test --label status=master -e SERVICE_NAME=proxy  -m 1G --name frontend-$i -p 83:80 nginx; done
@@ -135,12 +145,18 @@ USAGE: swarm [manager-start-all|manager-stop-all|manager-restart-all|manager-rm-
     -e SERVICE_NAME=webapp \
     -p 80 \
     nginx:latest
+```
 
-* References
+## References
+
+Many mush, such as:
+
   - https://www.consul.io/docs/agent/http/status.html
   - https://github.com/llitfkitfk/docker-tutorial-cn
   - https://help.aliyun.com/knowledge_detail/5974865.html
-* References
+
+More References
+
   - https://docs.docker.com/swarm/overview/
   - https://docs.docker.com/swarm/install-manual/
   - https://docs.docker.com/swarm/scheduler/strategy/
